@@ -168,14 +168,14 @@ public class BioSystem {
         int S = 500;
 
         String filename_alive = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-aliveSpatialDistribution-FINAL";
-        String filename_dead = "fastGrowers_death-alpha="+String.valueOf(alpha)+"-deadSpatialDistribution-Final";
-        String filename_gRate = "fastGrowers_death-alpha="+String.valueOf(alpha)+"-gRateDistribution-FINAL";
+        String filename_dead = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-deadSpatialDistribution-Final";
+        String filename_gRate = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-gRateDistribution-FINAL";
 
-        String filename_alive_precise = "fastGrowers_death-alpha="+String.valueOf(alpha)
+        String filename_alive_precise = "slowGrowers_death-alpha="+String.valueOf(alpha)
                 +"-aliveSpatialDistribution_precise-FINAL";
-        String filename_dead_precise = "fastGrowers_death-alpha="+String.valueOf(alpha)
+        String filename_dead_precise = "slowGrowers_death-alpha="+String.valueOf(alpha)
                 +"-deadSpatialDistribution_precise-FINAL";
-        String filename_gRate_precise = "fastGrowers_death-alpha="+String.valueOf(alpha)
+        String filename_gRate_precise = "slowGrowers_death-alpha="+String.valueOf(alpha)
                 +"-gRateDistribution_precise-FINAL";
 
         int[][][] allN_alive = new int[nReps][][];

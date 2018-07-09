@@ -237,7 +237,9 @@ public class BioSystem {
             allN_alive[r] = alivePopsOverTime;
             allN_dead[r] = deadPopsOverTime;
             allGRates[r] = gRatesOverTime;
+
             allPreciseN_alive[r] = preciseAlivePopsOverTime;
+            allPreciseN_dead[r] = preciseDeadPopsOverTime;
             allPreciseGRates[r] = preciseGRatesOverTime;
         }
 

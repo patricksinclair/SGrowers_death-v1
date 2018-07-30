@@ -1,3 +1,4 @@
+import javax.tools.Tool;
 import java.util.Random;
 
 public class BioSystem {
@@ -68,6 +69,30 @@ public class BioSystem {
             mh_gRates[i] = microhabitats[i].replication_or_death_rate();
         }
         return mh_gRates;
+    }
+
+    public double[] getNutrientDistributuionArray(){
+        double[] mh_S = new double[L];
+        for(int i = 0; i < L; i++){
+            mh_S[i] = microhabitats[i].getS();
+        }
+        return mh_S;
+    }
+
+    public double[] getPhi_cDistributionArray(){
+        double[] mh_phic = new double[L];
+        for(int i = 0; i < L; i++){
+            mh_phic[i] = microhabitats[i].phi_c();
+        }
+        return mh_phic;
+    }
+
+    public double[] getMu_SDistributionArray(){
+        double[] mh_muS = new double[L];
+        for(int i = 0; i < L; i++){
+            mh_muS[i] = microhabitats[i].mu_S();
+        }
+        return mh_muS;
     }
 
 
@@ -168,7 +193,7 @@ public class BioSystem {
         int S = 500;
 
         String filename_alive = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-aliveSpatialDistribution-FINAL";
-        String filename_dead = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-deadSpatialDistribution-Final";
+        String filename_dead = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-deadSpatialDistribution-FINAL";
         String filename_gRate = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-gRateDistribution-FINAL";
 
         String filename_alive_precise = "slowGrowers_death-alpha="+String.valueOf(alpha)
@@ -263,6 +288,139 @@ public class BioSystem {
     }
 
 
+    public static void exponentialGradient_AllTheDistributions(double input_alpha){
+
+        int L = 500, nReps = 20;
+        int nTimeMeasurements = 20;
+
+        double duration = 2000., interval = duration/(double)nTimeMeasurements;
+        double preciseDuration = duration/5., preciseInterval = preciseDuration/(double)nTimeMeasurements;
+
+        double alpha = input_alpha;
+        int S = 500;
+
+        String filename_alive = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-aliveSpatialDistribution-FINAL";
+        String filename_dead = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-deadSpatialDistribution-FINAL";
+        String filename_gRate = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-gRateDistribution-FINAL";
+        String filename_nutrients = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-nutrientDistribution-FINAL";
+        String filename_phiC = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-phi(c)Distribution-FINAL";
+        String filename_muS = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-mu(S)Distribution-FINAL";
+
+        String filename_alive_precise = "slowGrowers_death-alpha="+String.valueOf(alpha)
+                +"-aliveSpatialDistribution_precise-FINAL";
+        String filename_dead_precise = "slowGrowers_death-alpha="+String.valueOf(alpha)
+                +"-deadSpatialDistribution_precise-FINAL";
+        String filename_gRate_precise = "slowGrowers_death-alpha="+String.valueOf(alpha)
+                +"-gRateDistribution_precise-FINAL";
+
+        int[][][] allN_alive = new int[nReps][][];
+        int[][][] allN_dead = new int[nReps][][];
+        double[][][] allGRates = new double[nReps][][];
+
+        double[][][] allNutrients = new double[nReps][][];
+        double[][][] allphiC = new double[nReps][][];
+        double[][][] allmuS = new double[nReps][][];
+
+        int[][][] allPreciseN_alive = new int[nReps][][];
+        int[][][] allPreciseN_dead = new int[nReps][][];
+        double[][][] allPreciseGRates = new double[nReps][][];
+
+        for(int r = 0; r < nReps; r++){
+
+            boolean alreadyRecorded = false, alreadyPreciselyRecorded = false;
+
+            int[][] alivePopsOverTime = new int[nTimeMeasurements+1][];
+            int[][] deadPopsOverTime = new int[nTimeMeasurements+1][];
+            double[][] gRatesOverTime = new double[nTimeMeasurements+1][];
+
+            double[][] nutrientsOverTime = new double[nTimeMeasurements+1][];
+            double[][] phiC_OverTime = new double[nTimeMeasurements+1][];
+            double[][] muS_OverTime = new double[nTimeMeasurements+1][];
+
+            int timerCounter = 0;
+
+            int[][] preciseAlivePopsOverTime = new int[nTimeMeasurements+1][];
+            int[][] preciseDeadPopsOverTime = new int[nTimeMeasurements+1][];
+            double[][] preciseGRatesOverTime = new double[nTimeMeasurements+1][];
+            int preciseTimerCounter = 0;
+
+
+            BioSystem bs = new BioSystem(L, S, alpha);
+
+            while(bs.timeElapsed <= duration){
+
+                bs.performAction();
+
+                if((bs.getTimeElapsed()%preciseInterval >= 0. && bs.getTimeElapsed()%preciseInterval <= 0.01)
+                        && !alreadyPreciselyRecorded && preciseTimerCounter <= nTimeMeasurements){
+
+                    System.out.println("rep: "+r+"\ttime elapsed: "+String.valueOf(bs.getTimeElapsed())+"\tPRECISE");
+                    preciseAlivePopsOverTime[preciseTimerCounter] = bs.getLiveSpatialDistributionArray();
+                    preciseDeadPopsOverTime[preciseTimerCounter] = bs.getDeadSpatialDistributionArray();
+                    preciseGRatesOverTime[preciseTimerCounter] = bs.getGrowthRatesArray();
+
+                    alreadyPreciselyRecorded = true;
+                    preciseTimerCounter++;
+                }
+                if(bs.getTimeElapsed()%preciseInterval >= 0.1) alreadyPreciselyRecorded = false;
+
+
+                if((bs.getTimeElapsed()%interval >= 0. && bs.getTimeElapsed()%interval <= 0.01) && !alreadyRecorded){
+
+                    System.out.println("rep: "+r+"\ttime elapsed: "+String.valueOf(bs.getTimeElapsed()));
+                    alivePopsOverTime[timerCounter] = bs.getLiveSpatialDistributionArray();
+                    deadPopsOverTime[timerCounter] = bs.getDeadSpatialDistributionArray();
+                    gRatesOverTime[timerCounter] = bs.getGrowthRatesArray();
+
+                    nutrientsOverTime[timerCounter] = bs.getNutrientDistributuionArray();
+                    phiC_OverTime[timerCounter] = bs.getPhi_cDistributionArray();
+                    muS_OverTime[timerCounter] = bs.getMu_SDistributionArray();
+
+                    alreadyRecorded = true;
+                    timerCounter++;
+                }
+                if(bs.getTimeElapsed()%interval >= 0.1) alreadyRecorded = false;
+            }
+
+            allN_alive[r] = alivePopsOverTime;
+            allN_dead[r] = deadPopsOverTime;
+            allGRates[r] = gRatesOverTime;
+
+            allNutrients[r] = nutrientsOverTime;
+            allphiC[r] = phiC_OverTime;
+            allmuS[r] = muS_OverTime;
+
+            allPreciseN_alive[r] = preciseAlivePopsOverTime;
+            allPreciseN_dead[r] = preciseDeadPopsOverTime;
+            allPreciseGRates[r] = preciseGRatesOverTime;
+        }
+
+        double[][] averagedAlivePopDistributions = Toolbox.averagedResults(allN_alive);
+        double[][] averagedDeadPopDistributions = Toolbox.averagedResults(allN_dead);
+        double[][] averagedGRateDistributions = Toolbox.averagedResults(allGRates);
+
+        double[][] averagedNutrientDistributions = Toolbox.averagedResults(allNutrients);
+        double[][] averagedPhi_cDistributions = Toolbox.averagedResults(allphiC);
+        double[][] averagedMu_SDistributions = Toolbox.averagedResults(allmuS);
+
+        double[][] averagedPreciseAlivePopDistributions = Toolbox.averagedResults(allPreciseN_alive);
+        double[][] averagedPreciseDeadPopDistributions = Toolbox.averagedResults(allPreciseN_dead);
+        double[][] averagedPreciseGRateDistributions = Toolbox.averagedResults(allPreciseGRates);
+
+        //print the live and dead results to two separate files, then just join them together in
+        //gnuplot or something
+        Toolbox.printAveragedResultsToFile(filename_alive, averagedAlivePopDistributions);
+        Toolbox.printAveragedResultsToFile(filename_dead, averagedDeadPopDistributions);
+        Toolbox.printAveragedResultsToFile(filename_gRate, averagedGRateDistributions);
+
+        Toolbox.printAveragedResultsToFile(filename_nutrients, averagedNutrientDistributions);
+        Toolbox.printAveragedResultsToFile(filename_phiC, averagedPhi_cDistributions);
+        Toolbox.printAveragedResultsToFile(filename_muS, averagedMu_SDistributions);
+
+        Toolbox.printAveragedResultsToFile(filename_alive_precise, averagedPreciseAlivePopDistributions);
+        Toolbox.printAveragedResultsToFile(filename_dead_precise, averagedPreciseDeadPopDistributions);
+        Toolbox.printAveragedResultsToFile(filename_gRate_precise, averagedPreciseGRateDistributions);
+    }
 
 
 

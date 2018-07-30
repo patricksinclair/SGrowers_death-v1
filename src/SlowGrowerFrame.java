@@ -82,7 +82,7 @@ public class SlowGrowerFrame extends JFrame {
         bioSys = new BioSystem(L, S, alpha);
 
         sgPan = new SlowGrowerPanel(bioSys);
-        sgPan.setPreferredSize(new Dimension(1000, 700));
+        sgPan.setPreferredSize(new Dimension(1000, 1000));
 
         JPanel controlPanel = new JPanel();
         controlPanel.add(goButton);

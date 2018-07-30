@@ -33,6 +33,10 @@ public class Microhabitat {
         return 1. + 9.*mu/mu_max;
     }
 
+    public double mu_S(){
+        return S/(K_prime + S);
+    }
+
     public double phi_c(){
         return 1. - (6.*(c/beta())*(c/beta()))/(5. + (c/beta())*(c/beta()));
     }

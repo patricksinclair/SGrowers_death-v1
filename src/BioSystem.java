@@ -290,28 +290,28 @@ public class BioSystem {
 
     public static void exponentialGradient_AllTheDistributions(double input_alpha){
 
-        int L = 500, nReps = 20;
+        int L = 500, nReps = 10;
         int nTimeMeasurements = 20;
 
         double duration = 2000., interval = duration/(double)nTimeMeasurements;
         double preciseDuration = duration/5., preciseInterval = preciseDuration/(double)nTimeMeasurements;
 
         double alpha = input_alpha;
-        int S = 500;
+        int S = 10000;
 
-        String filename_alive = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-aliveSpatialDistribution-FINAL";
-        String filename_dead = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-deadSpatialDistribution-FINAL";
-        String filename_gRate = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-gRateDistribution-FINAL";
-        String filename_nutrients = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-nutrientDistribution-FINAL";
-        String filename_phiC = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-phi(c)Distribution-FINAL";
-        String filename_muS = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-mu(S)Distribution-FINAL";
+        String filename_alive = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-aliveSpatialDistribution-BIGGER";
+        String filename_dead = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-deadSpatialDistribution-BIGGER";
+        String filename_gRate = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-gRateDistribution-BIGGER";
+        String filename_nutrients = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-nutrientDistribution-BIGGER";
+        String filename_phiC = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-phi(c)Distribution-BIGGER";
+        String filename_muS = "slowGrowers_death-alpha="+String.valueOf(alpha)+"-mu(S)Distribution-BIGGER";
 
         String filename_alive_precise = "slowGrowers_death-alpha="+String.valueOf(alpha)
-                +"-aliveSpatialDistribution_precise-FINAL";
+                +"-aliveSpatialDistribution_precise-BIGGER";
         String filename_dead_precise = "slowGrowers_death-alpha="+String.valueOf(alpha)
-                +"-deadSpatialDistribution_precise-FINAL";
+                +"-deadSpatialDistribution_precise-BIGGER";
         String filename_gRate_precise = "slowGrowers_death-alpha="+String.valueOf(alpha)
-                +"-gRateDistribution_precise-FINAL";
+                +"-gRateDistribution_precise-BIGGER";
 
         int[][][] allN_alive = new int[nReps][][];
         int[][][] allN_dead = new int[nReps][][];
